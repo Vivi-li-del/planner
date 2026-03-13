@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Family Trip & Weekend Planner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+    * { font-family: 'Manrope', system-ui, sans-serif; }
+    .bg-hero { background: radial-gradient(circle at 20% 20%, rgba(99,102,241,0.12), transparent 30%),
+                            radial-gradient(circle at 80% 0%, rgba(236,72,153,0.12), transparent 25%),
+                            linear-gradient(135deg, #0f172a 0%, #111827 45%, #0b1224 100%); }
+    .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(16px); }
+    .card { transition: transform .2s ease, box-shadow .2s ease; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
+    .pill { border: 1px solid rgba(255,255,255,0.15); }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100">
+  <header class="bg-hero text-white">
+    <div class="max-w-6xl mx-auto px-6 py-12">
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <p class="text-sm uppercase tracking-[0.2em] text-slate-300">Family Organizer</p>
+          <h1 class="text-4xl md:text-5xl font-extrabold mt-2">Trips, Weekends & Activities Planner</h1>
+          <p class="mt-4 text-slate-300 max-w-2xl">Plan trips, shape weekends, and keep all family activities in one beautiful view. Capture ideas, set priorities, and never miss a moment.</p>
+          <div class="flex flex-wrap gap-2 mt-4">
+            <span class="pill px-3 py-1 rounded-full text-sm">Trips</span>
+            <span class="pill px-3 py-1 rounded-full text-sm">Weekend</span>
+            <span class="pill px-3 py-1 rounded-full text-sm">Family</span>
+          </div>
+        </div>
+        <div class="hidden md:block glass rounded-3xl p-5 border border-white/10">
+          <div class="text-sm text-slate-200 mb-3">Next Up</div>
+          <div class="space-y-2 text-slate-100">
+            <div class="flex items-center gap-3"><i class="fa-solid fa-plane text-indigo-400"></i> Flight search for spring trip</div>
+            <div class="flex items-center gap-3"><i class="fa-solid fa-basketball text-pink-400"></i> Kids sports on Saturday</div>
+            <div class="flex items-center gap-3"><i class="fa-solid fa-utensils text-emerald-400"></i> Family brunch Sunday</div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8 bg-white/5 border border-white/10 rounded-2xl p-5 grid md:grid-cols-3 gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-300"><i class="fa-solid fa-plane"></i></div>
+          <div>
+            <p class="text-sm text-slate-300">Trips</p>
+            <p class="font-semibold">Itineraries & budgets</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-300"><i class="fa-solid fa-sun"></i></div>
+          <div>
+            <p class="text-sm text-slate-300">Weekend</p>
+            <p class="font-semibold">Quick plans & errands</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-300"><i class="fa-solid fa-people-group"></i></div>
+          <div>
+            <p class="text-sm text-slate-300">Family</p>
+            <p class="font-semibold">Activities & events</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-12 space-y-10">
+    <!-- Input form -->
+    <section class="bg-slate-800 rounded-2xl p-6 border border-white/5 shadow-lg">
+      <div class="flex items-center justify-between flex-wrap gap-4 mb-4">
+        <div>
+          <h2 class="text-2xl font-bold">Add plan or activity</h2>
+          <p class="text-slate-400">Trips, weekends, birthdays, sports — keep everything together.</p>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          <button id="filter-all" class="px-4 py-2 rounded-full bg-indigo-600 text-white text-sm">All</button>
+          <button data-filter="trip" class="filter-btn px-4 py-2 rounded-full bg-white/10 text-sm">Trips</button>
+          <button data-filter="weekend" class="filter-btn px-4 py-2 rounded-full bg-white/10 text-sm">Weekend</button>
+          <button data-filter="family" class="filter-btn px-4 py-2 rounded-full bg-white/10 text-sm">Family</button>
+        </div>
+      </div>
+      <form id="plan-form" class="grid md:grid-cols-6 gap-3">
+        <input name="title" required placeholder="Title (e.g., Napa getaway, Soccer match)" class="md:col-span-2 px-4 py-3 rounded-xl bg-slate-900 border border-white/10 focus:border-indigo-500 outline-none" />
+        <input name="location" placeholder="Location (city, venue)" class="px-4 py-3 rounded-xl bg-slate-900 border border-white/10 focus:border-indigo-500 outline-none" />
+        <select name="type" required class="px-4 py-3 rounded-xl bg-slate-900 border border-white/10 focus:border-indigo-500 outline-none">
+          <option value="trip">Trip</option>
+          <option value="weekend">Weekend</option>
+          <option value="family">Family</option>
+        </select>
+        <input name="date" type="date" class="px-4 py-3 rounded-xl bg-slate-900 border border-white/10 focus:border-indigo-500 outline-none" />
+        <input name="endDate" type="date" placeholder="End date" class="px-4 py-3 rounded-xl bg-slate-900 border border-white/10 focus:border-indigo-500 outline-none" />
+        <button class="px-4 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-semibold">Add</button>
+      </form>
+      <textarea name="note" id="note" form="plan-form" placeholder="Notes (links, budget, packing list...)" class="mt-3 w-full px-4 py-3 rounded-xl bg-slate-900 border border-white/10 focus:border-indigo-500 outline-none"></textarea>
+    </section>
+
+    <!-- Boards -->
+    <section class="grid md:grid-cols-3 gap-6">
+      <div class="bg-slate-800 border border-white/5 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
+          <h3 class="font-semibold">Trips</h3>
+        </div>
+        <div id="trip-list" class="space-y-3 text-slate-200 text-sm min-h-[160px]"></div>
+      </div>
+      <div class="bg-slate-800 border border-white/5 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-3 h-3 rounded-full bg-pink-400"></div>
+          <h3 class="font-semibold">Weekend</h3>
+        </div>
+        <div id="weekend-list" class="space-y-3 text-slate-200 text-sm min-h-[160px]"></div>
+      </div>
+      <div class="bg-slate-800 border border-white/5 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+          <h3 class="font-semibold">Family</h3>
+        </div>
+        <div id="family-list" class="space-y-3 text-slate-200 text-sm min-h-[160px]"></div>
+      </div>
+    </section>
+
+    <!-- Upcoming & quick ideas -->
+    <section class="grid md:grid-cols-2 gap-6">
+      <div class="bg-slate-800 border border-white/5 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold">Upcoming</h3>
+          <span id="upcoming-count" class="text-xs text-slate-400"></span>
+        </div>
+        <div id="upcoming-list" class="space-y-3 text-sm text-slate-200 min-h-[120px]"></div>
+      </div>
+      <div class="bg-slate-800 border border-white/5 rounded-2xl p-5 shadow-lg">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold">Quick Ideas</h3>
+          <button id="shuffle-idea" class="text-xs px-3 py-1 rounded-full bg-white/10">Shuffle</button>
+        </div>
+        <p id="idea-text" class="text-slate-200">Tap shuffle for weekend inspiration.</p>
+      </div>
+    </section>
+
+    <!-- Views: Calendar & List -->
+    <section class="bg-slate-800 border border-white/5 rounded-2xl p-6 shadow-lg">
+      <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+        <div>
+          <h3 class="text-xl font-semibold">Calendar & List</h3>
+          <p class="text-slate-400 text-sm">See all plans at a glance. Calendar groups by day; list shows all entries.</p>
+        </div>
+        <div class="flex gap-2">
+          <button id="view-calendar" class="px-4 py-2 rounded-full bg-indigo-600 text-white text-sm">Calendar</button>
+          <button id="view-list" class="px-4 py-2 rounded-full bg-white/10 text-sm">List</button>
+        </div>
+      </div>
+      <div id="calendar-view" class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 text-sm text-slate-300">
+            <button id="prev-month" class="px-3 py-2 bg-white/5 rounded-lg border border-white/10"><i class="fa-solid fa-chevron-left"></i></button>
+            <span id="calendar-month" class="font-semibold text-slate-100"></span>
+            <button id="next-month" class="px-3 py-2 bg-white/5 rounded-lg border border-white/10"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+          <div class="hidden md:flex gap-2 text-xs text-slate-400">
+            <span class="px-2 py-1 rounded-full bg-indigo-500/20 text-indigo-100 border border-indigo-500/30">Trip</span>
+            <span class="px-2 py-1 rounded-full bg-pink-500/20 text-pink-100 border border-pink-500/30">Weekend</span>
+            <span class="px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-100 border border-emerald-500/30">Family</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-7 gap-2 text-xs text-slate-400">
+          <div class="text-center">Sun</div><div class="text-center">Mon</div><div class="text-center">Tue</div><div class="text-center">Wed</div><div class="text-center">Thu</div><div class="text-center">Fri</div><div class="text-center">Sat</div>
+        </div>
+        <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+      </div>
+      <div id="list-view" class="hidden mt-4 space-y-3"></div>
+    </section>
+  </main>
+
+  <script src="planner.js"></script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Li Vivi - Personal Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Keep content visible; fade handled in JS with no opacity drop */
+        .fade-in {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+        }
+        .fade-in.active {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+        
+        .typing-effect {
+            border-right: 3px solid #667eea;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { border-color: #667eea; }
+            51%, 100% { border-color: transparent; }
+        }
+        
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 scroll-smooth">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md shadow-sm z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold gradient-text">Li Vivi</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-gray-700 hover:text-purple-600">Home</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-purple-600">About</a>
+                    <a href="#skills" class="nav-link text-gray-700 hover:text-purple-600">Skills</a>
+                    <a href="#sap-ai" class="nav-link text-gray-700 hover:text-purple-600">SAP & AI</a>
+                    <a href="#projects" class="nav-link text-gray-700 hover:text-purple-600">Projects</a>
+                    <a href="#contact" class="nav-link text-gray-700 hover:text-purple-600">Contact</a>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-6 py-4 space-y-3">
+                <a href="#home" class="block text-gray-700 hover:text-purple-600">Home</a>
+                <a href="#about" class="block text-gray-700 hover:text-purple-600">About</a>
+                <a href="#skills" class="block text-gray-700 hover:text-purple-600">Skills</a>
+                <a href="#sap-ai" class="block text-gray-700 hover:text-purple-600">SAP & AI</a>
+                <a href="#projects" class="block text-gray-700 hover:text-purple-600">Projects</a>
+                <a href="#contact" class="block text-gray-700 hover:text-purple-600">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20">
+        <div class="container mx-auto px-6 text-center fade-in">
+            <div class="mb-8">
+                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face" 
+                     alt="Profile" 
+                     class="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-white shadow-lg">
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold mb-4">
+                Hi, I'm <span class="gradient-text">Li Vivi</span>
+            </h1>
+            <div class="text-2xl text-gray-600 mb-8">
+                <span id="typing-text" class="typing-effect"></span>
+            </div>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                Passionate about creating beautiful and functional digital experiences. 
+                I love turning ideas into reality through code and design.
+            </p>
+            <div class="flex justify-center space-x-4 mb-12">
+                <a href="#contact" class="bg-purple-600 text-white px-8 py-3 rounded-full hover:bg-purple-700 transition-colors">
+                    Get In Touch
+                </a>
+                <a href="#projects" class="border-2 border-purple-600 text-purple-600 px-8 py-3 rounded-full hover:bg-purple-600 hover:text-white transition-colors">
+                    View Projects
+                </a>
+            </div>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">
+                    <i class="fab fa-github text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">
+                    <i class="fab fa-linkedin text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">
+                    <i class="fab fa-twitter text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-600 hover:text-purple-600 transition-colors">
+                    <i class="fas fa-envelope text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SAP & AI Section -->
+    <section id="sap-ai" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-4">
+                SAP Solutions & <span class="gradient-text">AI Validation</span>
+            </h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">
+                Enterprise-grade SAP architectures paired with responsible AI validation, governance, and risk controls. From SAP S/4HANA roadmaps to model monitoring, I blend scalable platforms with trustworthy AI delivery.
+            </p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover bg-gray-50 p-8 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-xl font-semibold">SAP Solution Design</div>
+                        <i class="fas fa-diagram-project text-purple-600 text-2xl"></i>
+                    </div>
+                    <p class="text-gray-600 mb-4">Blueprinting SAP S/4HANA, BTP, and integration landscapes with secure, scalable data flows.</p>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <div class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i>Process mining & fit-gap analysis</div>
+                        <div class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i>API-first integrations & eventing</div>
+                        <div class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i>SAP Fiori UX standards</div>
+                    </div>
+                </div>
+                <div class="card-hover bg-gray-50 p-8 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-xl font-semibold">AI Validation Workflow</div>
+                        <i class="fas fa-shield-check text-purple-600 text-2xl"></i>
+                    </div>
+                    <p class="text-gray-600 mb-4">Structured model review with policy alignment, evals, and continuous monitoring for drift.</p>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <div class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i>Red/blue team safety testing</div>
+                        <div class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i>Fairness, robustness, privacy checks</div>
+                        <div class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i>Evidence packs for governance boards</div>
+                    </div>
+                </div>
+                <div class="card-hover bg-gray-50 p-8 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-xl font-semibold">Value Realization</div>
+                        <i class="fas fa-rocket text-purple-600 text-2xl"></i>
+                    </div>
+                    <p class="text-gray-600 mb-4">KPIs, dashboards, and controlled rollouts to prove ROI across SAP and AI initiatives.</p>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <div class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i>Outcome-driven success metrics</div>
+                        <div class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i>Guardrail policies & audit trails</div>
+                        <div class="flex items-center"><i class="fas fa-check text-purple-600 mr-2"></i>Playbooks for scale and handover</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16">
+                About <span class="gradient-text">Me</span>
+            </h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4">Story & Journey</h3>
+                    <p class="text-gray-600 mb-6">
+                        I'm a creative developer with a passion for building elegant solutions to complex problems. 
+                        My journey in tech started with curiosity and has evolved into a career I'm truly passionate about.
+                    </p>
+                    <p class="text-gray-600 mb-6">
+                        I believe in the power of clean code, intuitive design, and continuous learning. 
+                        When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, 
+                        or enjoying a good cup of coffee while brainstorming new ideas.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <div class="text-2xl font-bold text-purple-600">5+</div>
+                            <div class="text-gray-600">Years Experience</div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <div class="text-2xl font-bold text-purple-600">50+</div>
+                            <div class="text-gray-600">Projects Completed</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="card-hover bg-gray-50 p-6 rounded-lg text-center">
+                        <i class="fas fa-code text-3xl text-purple-600 mb-4"></i>
+                        <h4 class="font-semibold mb-2">Clean Code</h4>
+                        <p class="text-sm text-gray-600">Writing maintainable and scalable code</p>
+                    </div>
+                    <div class="card-hover bg-gray-50 p-6 rounded-lg text-center">
+                        <i class="fas fa-palette text-3xl text-purple-600 mb-4"></i>
+                        <h4 class="font-semibold mb-2">Creative Design</h4>
+                        <p class="text-sm text-gray-600">Beautiful and user-friendly interfaces</p>
+                    </div>
+                    <div class="card-hover bg-gray-50 p-6 rounded-lg text-center">
+                        <i class="fas fa-mobile-alt text-3xl text-purple-600 mb-4"></i>
+                        <h4 class="font-semibold mb-2">Responsive</h4>
+                        <p class="text-sm text-gray-600">Optimized for all devices</p>
+                    </div>
+                    <div class="card-hover bg-gray-50 p-6 rounded-lg text-center">
+                        <i class="fas fa-rocket text-3xl text-purple-600 mb-4"></i>
+                        <h4 class="font-semibold mb-2">Performance</h4>
+                        <p class="text-sm text-gray-600">Fast and efficient solutions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16">
+                My <span class="gradient-text">Skills</span>
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover bg-white p-8 rounded-lg shadow-lg">
+                    <div class="text-center mb-6">
+                        <i class="fas fa-laptop-code text-4xl text-purple-600 mb-4"></i>
+                        <h3 class="text-xl font-semibold">Frontend Development</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">HTML/CSS</span>
+                                <span class="text-purple-600">95%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">JavaScript</span>
+                                <span class="text-purple-600">90%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">React/Vue</span>
+                                <span class="text-purple-600">85%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-hover bg-white p-8 rounded-lg shadow-lg">
+                    <div class="text-center mb-6">
+                        <i class="fas fa-server text-4xl text-purple-600 mb-4"></i>
+                        <h3 class="text-xl font-semibold">Backend Development</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">Node.js</span>
+                                <span class="text-purple-600">88%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">Python</span>
+                                <span class="text-purple-600">82%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 82%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">Databases</span>
+                                <span class="text-purple-600">80%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">SAP Solutions</span>
+                                <span class="text-purple-600">84%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 84%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-hover bg-white p-8 rounded-lg shadow-lg">
+                    <div class="text-center mb-6">
+                        <i class="fas fa-tools text-4xl text-purple-600 mb-4"></i>
+                        <h3 class="text-xl font-semibold">Tools & Technologies</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">Git/GitHub</span>
+                                <span class="text-purple-600">92%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">Docker</span>
+                                <span class="text-purple-600">75%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">CI/CD</span>
+                                <span class="text-purple-600">78%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-600">AI Validation & Governance</span>
+                                <span class="text-purple-600">81%</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="hero-gradient h-2 rounded-full" style="width: 81%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16">
+                Featured <span class="gradient-text">Projects</span>
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover bg-white rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop" 
+                         alt="Project 1" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">E-Commerce Platform</h3>
+                        <p class="text-gray-600 mb-4">A modern e-commerce solution with real-time inventory management and secure payment processing.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">React</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">Node.js</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">MongoDB</span>
+                        </div>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-purple-600 hover:text-purple-700">
+                                <i class="fas fa-external-link-alt"></i> Live Demo
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-gray-700">
+                                <i class="fab fa-github"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-hover bg-white rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop" 
+                         alt="Project 2" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Task Management App</h3>
+                        <p class="text-gray-600 mb-4">Collaborative task management tool with real-time updates and team collaboration features.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">Vue.js</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">Firebase</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">Tailwind</span>
+                        </div>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-purple-600 hover:text-purple-700">
+                                <i class="fas fa-external-link-alt"></i> Live Demo
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-gray-700">
+                                <i class="fab fa-github"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-hover bg-white rounded-lg overflow-hidden shadow-lg">
+                    <img src="https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&h=250&fit=crop" 
+                         alt="Project 3" 
+                         class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Weather Dashboard</h3>
+                        <p class="text-gray-600 mb-4">Beautiful weather application with detailed forecasts, interactive maps, and location-based alerts.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">JavaScript</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">API</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-sm">Charts.js</span>
+                        </div>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-purple-600 hover:text-purple-700">
+                                <i class="fas fa-external-link-alt"></i> Live Demo
+                            </a>
+                            <a href="#" class="text-gray-600 hover:text-gray-700">
+                                <i class="fab fa-github"></i> Code
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16">
+                Get In <span class="gradient-text">Touch</span>
+            </h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-6">Let's Connect</h3>
+                        <p class="text-gray-600 mb-8">
+                            I'm always interested in hearing about new projects and opportunities. 
+                            Whether you have a question or just want to say hi, feel free to reach out!
+                        </p>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-envelope text-purple-600 text-xl"></i>
+                                <span class="text-gray-600">vivi.li@example.com</span>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-phone text-purple-600 text-xl"></i>
+                                <span class="text-gray-600">+1 (555) 123-4567</span>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-map-marker-alt text-purple-600 text-xl"></i>
+                                <span class="text-gray-600">San Francisco, CA</span>
+                            </div>
+                        </div>
+                        <div class="flex space-x-4 mt-8">
+                            <a href="#" class="bg-purple-600 text-white p-3 rounded-full hover:bg-purple-700 transition-colors">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="#" class="bg-purple-600 text-white p-3 rounded-full hover:bg-purple-700 transition-colors">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="bg-purple-600 text-white p-3 rounded-full hover:bg-purple-700 transition-colors">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="bg-purple-600 text-white p-3 rounded-full hover:bg-purple-700 transition-colors">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <form id="contact-form" class="space-y-6">
+                            <div>
+                                <label class="block text-gray-700 mb-2">Name</label>
+                                <input type="text" 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-600"
+                                       placeholder="Your Name"
+                                       required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Email</label>
+                                <input type="email" 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-600"
+                                       placeholder="your@email.com"
+                                       required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2">Message</label>
+                                <textarea rows="5" 
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-600"
+                                          placeholder="Your message..."
+                                          required></textarea>
+                            </div>
+                            <button type="submit" 
+                                    class="w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2024 Li Vivi. All rights reserved.</p>
+            <p class="mt-2 text-gray-400">Made with <i class="fas fa-heart text-red-500"></i> and lots of <i class="fas fa-coffee text-brown-400"></i></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
