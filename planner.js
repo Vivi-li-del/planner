@@ -17,6 +17,7 @@ const calendarGrid = document.getElementById('calendar-grid');
 const calendarMonthLabel = document.getElementById('calendar-month');
 const prevMonthBtn = document.getElementById('prev-month');
 const nextMonthBtn = document.getElementById('next-month');
+const mapContainer = document.getElementById('map');
 
 const ideas = [
   'Sunset picnic at the park',
@@ -34,6 +35,8 @@ let activeFilter = 'all';
 let editingId = null;
 let calendarCursor = new Date();
 let calendarPickTarget = 'start';
+let mapInstance = null;
+let mapMarkers = [];
 
 function renderPlans() {
   const now = new Date();
@@ -66,6 +69,7 @@ function renderPlans() {
       <div class="flex gap-2 text-xs mt-1">
         <button class="edit-btn px-2 py-1 rounded bg-white/10" data-id="${plan.id}"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
         <button class="delete-btn px-2 py-1 rounded bg-white/10 text-rose-300" data-id="${plan.id}"><i class="fa-regular fa-trash-can"></i> Delete</button>
+        ${plan.location ? `<button class="star-btn px-2 py-1 rounded bg-white/10 text-amber-300" data-id="${plan.id}"><i class="fa-solid fa-star"></i> Star on map</button>` : ''}
       </div>
       ${plan.note ? `<p class="text-sm text-slate-200">${plan.note}</p>` : ''}
     `;
@@ -110,8 +114,12 @@ function renderPlans() {
   document.querySelectorAll('.delete-btn').forEach(btn => {
     btn.onclick = () => deletePlan(btn.dataset.id);
   });
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    btn.onclick = () => starOnMap(btn.dataset.id);
+  });
 
   renderCalendar();
+  refreshMapPins();
 }
 
 function badgeClass(type) {
@@ -271,10 +279,29 @@ function setFilters(activeBtn) {
   renderPlans();
 }
 
-shuffleIdea.addEventListener('click', () => {
-  const idea = ideas[Math.floor(Math.random() * ideas.length)];
-  ideaText.textContent = idea;
-});
+if (shuffleIdea && ideaText) {
+  shuffleIdea.addEventListener('click', () => {
+    const idea = ideas[Math.floor(Math.random() * ideas.length)];
+    ideaText.textContent = idea;
+  });
+}
+
+async function starOnMap(id) {
+  const plan = plans.find(p => p.id === id);
+  if (!plan || !plan.location) return;
+  const cached = mapMarkers.find(m => m.id === id);
+  if (cached) {
+    mapInstance.setView(cached.latlng, 12);
+    return;
+  }
+  const result = await geocode(plan.location);
+  if (result) {
+    plan.latlng = result;
+    addMarker(id, result, plan.title, plan.location, plan.type);
+    plans = plans.map(p => p.id === id ? plan : p);
+    mapInstance.setView(result, 12);
+  }
+}
 
 function startEdit(id) {
   const plan = plans.find(p => p.id === id);

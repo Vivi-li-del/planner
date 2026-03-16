@@ -6,6 +6,7 @@
   <title>Family Trip & Weekend Planner</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
     * { font-family: 'Manrope', system-ui, sans-serif; }
@@ -122,21 +123,14 @@
       </div>
     </section>
 
-    <!-- Upcoming & quick ideas -->
-    <section class="grid md:grid-cols-2 gap-6">
+    <!-- Upcoming -->
+    <section class="grid md:grid-cols-1 gap-6">
       <div class="bg-slate-800 border border-white/5 rounded-2xl p-5 shadow-lg">
         <div class="flex items-center justify-between mb-3">
           <h3 class="font-semibold">Upcoming</h3>
           <span id="upcoming-count" class="text-xs text-slate-400"></span>
         </div>
         <div id="upcoming-list" class="space-y-3 text-sm text-slate-200 min-h-[120px]"></div>
-      </div>
-      <div class="bg-slate-800 border border-white/5 rounded-2xl p-5 shadow-lg">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="font-semibold">Quick Ideas</h3>
-          <button id="shuffle-idea" class="text-xs px-3 py-1 rounded-full bg-white/10">Shuffle</button>
-        </div>
-        <p id="idea-text" class="text-slate-200">Tap shuffle for weekend inspiration.</p>
       </div>
     </section>
 
@@ -174,6 +168,21 @@
     </section>
   </main>
 
+  <!-- Map pins -->
+  <section class="bg-slate-800 border border-white/5 rounded-2xl p-6 shadow-lg max-w-6xl mx-auto px-6 mb-12">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h3 class="text-xl font-semibold">Starred Locations Map</h3>
+        <p class="text-slate-400 text-sm">Click “Star on map” on any plan to pin its location.</p>
+      </div>
+      <div class="hidden md:flex gap-2 text-xs text-slate-400">
+        <span class="px-2 py-1 rounded-full bg-white/10 border border-white/10">Powered by OpenStreetMap</span>
+      </div>
+    </div>
+    <div id="map" class="w-full h-[360px] rounded-2xl border border-white/10 overflow-hidden"></div>
+  </section>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="planner.js"></script>
 </body>
 </html>
