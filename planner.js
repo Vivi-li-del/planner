@@ -17,7 +17,6 @@ const calendarGrid = document.getElementById('calendar-grid');
 const calendarMonthLabel = document.getElementById('calendar-month');
 const prevMonthBtn = document.getElementById('prev-month');
 const nextMonthBtn = document.getElementById('next-month');
-const mapContainer = document.getElementById('map');
 
 const ideas = [
   'Sunset picnic at the park',
@@ -35,8 +34,6 @@ let activeFilter = 'all';
 let editingId = null;
 let calendarCursor = new Date();
 let calendarPickTarget = 'start';
-let mapInstance = null;
-let mapMarkers = [];
 
 function renderPlans() {
   const now = new Date();
@@ -69,7 +66,6 @@ function renderPlans() {
       <div class="flex gap-2 text-xs mt-1">
         <button class="edit-btn px-2 py-1 rounded bg-white/10" data-id="${plan.id}"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
         <button class="delete-btn px-2 py-1 rounded bg-white/10 text-rose-300" data-id="${plan.id}"><i class="fa-regular fa-trash-can"></i> Delete</button>
-        ${plan.location ? `<button class="star-btn px-2 py-1 rounded bg-white/10 text-amber-300" data-id="${plan.id}"><i class="fa-solid fa-star"></i> Star on map</button>` : ''}
       </div>
       ${plan.note ? `<p class="text-sm text-slate-200">${plan.note}</p>` : ''}
     `;
@@ -100,6 +96,7 @@ function renderPlans() {
         <span class="text-xs px-2 py-1 rounded-full ${badgeClass(plan.type)}">${plan.type}</span>
       </div>
       <div class="text-xs text-slate-400 flex items-center gap-2">${range}${plan.location ? ` • ${plan.location}` : ''}</div>
+      ${renderItinerary(plan)}
       ${plan.note ? `<p class="text-slate-200">${plan.note}</p>` : ''}
     `;
     listView.appendChild(listItem);
@@ -114,12 +111,8 @@ function renderPlans() {
   document.querySelectorAll('.delete-btn').forEach(btn => {
     btn.onclick = () => deletePlan(btn.dataset.id);
   });
-  document.querySelectorAll('.star-btn').forEach(btn => {
-    btn.onclick = () => starOnMap(btn.dataset.id);
-  });
 
   renderCalendar();
-  refreshMapPins();
 }
 
 function badgeClass(type) {
@@ -238,6 +231,9 @@ form.addEventListener('submit', (e) => {
     type: data.get('type') || 'trip',
     date: data.get('date') || '',
     endDate: data.get('endDate') || '',
+    hotels: (data.get('hotels') || '').trim(),
+    restaurants: (data.get('restaurants') || '').trim(),
+    attractions: (data.get('attractions') || '').trim(),
     note: data.get('note')?.trim() || ''
   };
   const startVal = parseDate(plan.date);
@@ -279,30 +275,6 @@ function setFilters(activeBtn) {
   renderPlans();
 }
 
-if (shuffleIdea && ideaText) {
-  shuffleIdea.addEventListener('click', () => {
-    const idea = ideas[Math.floor(Math.random() * ideas.length)];
-    ideaText.textContent = idea;
-  });
-}
-
-async function starOnMap(id) {
-  const plan = plans.find(p => p.id === id);
-  if (!plan || !plan.location) return;
-  const cached = mapMarkers.find(m => m.id === id);
-  if (cached) {
-    mapInstance.setView(cached.latlng, 12);
-    return;
-  }
-  const result = await geocode(plan.location);
-  if (result) {
-    plan.latlng = result;
-    addMarker(id, result, plan.title, plan.location, plan.type);
-    plans = plans.map(p => p.id === id ? plan : p);
-    mapInstance.setView(result, 12);
-  }
-}
-
 function startEdit(id) {
   const plan = plans.find(p => p.id === id);
   if (!plan) return;
@@ -331,6 +303,26 @@ function createId() {
   return 'p_' + Math.random().toString(36).slice(2, 9) + Date.now();
 }
 
+function renderItinerary(plan) {
+  if (plan.type !== 'trip') return '';
+  const hotels = splitLines(plan.hotels);
+  const restaurants = splitLines(plan.restaurants);
+  const attractions = splitLines(plan.attractions);
+  if (!hotels.length && !restaurants.length && !attractions.length) return '';
+  const pill = (items, icon) => items.map(i => `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/10 text-[11px]"><i class="fa-solid ${icon}"></i> ${i}</span>`).join(' ');
+  return `
+    <div class="flex flex-wrap gap-2 mt-2 text-xs text-slate-200">
+      ${hotels.length ? pill(hotels, 'fa-hotel') : ''}
+      ${restaurants.length ? pill(restaurants, 'fa-utensils') : ''}
+      ${attractions.length ? pill(attractions, 'fa-mountain-sun') : ''}
+    </div>
+  `;
+}
+
+function splitLines(val) {
+  return (val || '').split('\n').map(v => v.trim()).filter(Boolean);
+}
+
 // View toggle
 function setView(view) {
   if (view === 'list') {
@@ -355,11 +347,18 @@ nextMonthBtn?.addEventListener('click', () => { calendarCursor.setMonth(calendar
 form.date.addEventListener('change', () => { calendarPickTarget = 'end'; renderCalendar(); });
 form.endDate.addEventListener('change', () => { calendarPickTarget = 'start'; renderCalendar(); });
 
+if (shuffleIdea && ideaText) {
+  shuffleIdea.addEventListener('click', () => {
+    const idea = ideas[Math.floor(Math.random() * ideas.length)];
+    ideaText.textContent = idea;
+  });
+}
+
 // Seed some sample plans
 plans = [
-  { id: createId(), title: 'Spring break road trip', location: 'San Diego', type: 'trip', date: '2026-04-10', endDate: '2026-04-15', note: 'Book hotel, pack layers, bring snacks' },
-  { id: createId(), title: 'Saturday soccer', location: 'Community field', type: 'family', date: '2026-03-21', endDate: '', note: 'Bring water and snacks' },
-  { id: createId(), title: 'Brunch + farmers market', location: 'Downtown', type: 'weekend', date: '2026-03-22', endDate: '', note: 'Try the new coffee spot' }
+  { id: createId(), title: 'Spring break road trip', location: 'San Diego', type: 'trip', date: '2026-04-10', endDate: '2026-04-15', hotels: 'Hotel Indigo', restaurants: 'Liberty Public Market', attractions: 'Balboa Park\nLa Jolla Cove', note: 'Book hotel, pack layers, bring snacks' },
+  { id: createId(), title: 'Saturday soccer', location: 'Community field', type: 'family', date: '2026-03-21', endDate: '', hotels: '', restaurants: '', attractions: '', note: 'Bring water and snacks' },
+  { id: createId(), title: 'Brunch + farmers market', location: 'Downtown', type: 'weekend', date: '2026-03-22', endDate: '', hotels: '', restaurants: '', attractions: '', note: 'Try the new coffee spot' }
 ];
 
 setFilters();
