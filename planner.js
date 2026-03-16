@@ -15,6 +15,7 @@ const calendarMonthLabel = document.getElementById('calendar-month');
 const prevMonthBtn = document.getElementById('prev-month');
 const nextMonthBtn = document.getElementById('next-month');
 const itineraryFields = document.getElementById('itinerary-fields');
+const itineraryHint = document.getElementById('itinerary-hint');
 
 const ideas = [
   'Sunset picnic at the park',
@@ -228,6 +229,8 @@ form.addEventListener('submit', (e) => {
   }
   renderPlans();
   form.reset();
+  toggleItineraryFields('trip');
+  updateItineraryHint();
 });
 
 filterAll.addEventListener('click', () => {
@@ -269,6 +272,7 @@ function startEdit(id) {
   submitBtn.textContent = 'Update';
   form.scrollIntoView({ behavior: 'smooth' });
   toggleItineraryFields(plan.type);
+  updateItineraryHint();
 }
 
 function deletePlan(id) {
@@ -278,6 +282,7 @@ function deletePlan(id) {
     submitBtn.textContent = 'Add';
     form.reset();
     toggleItineraryFields('trip');
+    updateItineraryHint();
   }
   renderPlans();
 }
@@ -333,6 +338,9 @@ nextMonthBtn?.addEventListener('click', () => { calendarCursor.setMonth(calendar
 form.date.addEventListener('change', () => { calendarPickTarget = 'end'; renderCalendar(); });
 form.endDate.addEventListener('change', () => { calendarPickTarget = 'start'; renderCalendar(); });
 form.type.addEventListener('change', (e) => toggleItineraryFields(e.target.value));
+form.date.addEventListener('change', updateItineraryHint);
+form.endDate.addEventListener('change', updateItineraryHint);
+form.type.addEventListener('change', updateItineraryHint);
 
 function toggleItineraryFields(type) {
   if (!itineraryFields) return;
@@ -348,6 +356,28 @@ function toggleItineraryFields(type) {
 
 // initial state
 toggleItineraryFields(form.type.value || 'trip');
+updateItineraryHint();
+
+function updateItineraryHint() {
+  if (!itineraryHint) return;
+  const type = form.type.value;
+  const start = parseDate(form.date.value);
+  const end = parseDate(form.endDate.value) || start;
+  if (type !== 'trip') {
+    itineraryHint.textContent = '';
+    return;
+  }
+  if (!start) {
+    itineraryHint.textContent = 'Add a start date to suggest itineraries per day.';
+    return;
+  }
+  const finalEnd = end && end < start ? start : end;
+  if (finalEnd && start && finalEnd > start) {
+    itineraryHint.textContent = `Add hotels, restaurants, and attractions for ${formatRange(start, finalEnd)}.`;
+  } else {
+    itineraryHint.textContent = 'Add hotels, restaurants, and attractions for this trip day.';
+  }
+}
 
 if (shuffleIdea && ideaText) {
   shuffleIdea.addEventListener('click', () => {
