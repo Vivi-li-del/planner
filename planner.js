@@ -14,6 +14,7 @@ const calendarGrid = document.getElementById('calendar-grid');
 const calendarMonthLabel = document.getElementById('calendar-month');
 const prevMonthBtn = document.getElementById('prev-month');
 const nextMonthBtn = document.getElementById('next-month');
+const itineraryFields = document.getElementById('itinerary-fields');
 
 const ideas = [
   'Sunset picnic at the park',
@@ -262,8 +263,12 @@ function startEdit(id) {
   form.date.value = plan.date;
   form.endDate.value = plan.endDate;
   form.note.value = plan.note;
+  form.hotels.value = plan.hotels || '';
+  form.restaurants.value = plan.restaurants || '';
+  form.attractions.value = plan.attractions || '';
   submitBtn.textContent = 'Update';
   form.scrollIntoView({ behavior: 'smooth' });
+  toggleItineraryFields(plan.type);
 }
 
 function deletePlan(id) {
@@ -272,6 +277,7 @@ function deletePlan(id) {
     editingId = null;
     submitBtn.textContent = 'Add';
     form.reset();
+    toggleItineraryFields('trip');
   }
   renderPlans();
 }
@@ -326,6 +332,22 @@ prevMonthBtn?.addEventListener('click', () => { calendarCursor.setMonth(calendar
 nextMonthBtn?.addEventListener('click', () => { calendarCursor.setMonth(calendarCursor.getMonth() + 1); renderCalendar(); });
 form.date.addEventListener('change', () => { calendarPickTarget = 'end'; renderCalendar(); });
 form.endDate.addEventListener('change', () => { calendarPickTarget = 'start'; renderCalendar(); });
+form.type.addEventListener('change', (e) => toggleItineraryFields(e.target.value));
+
+function toggleItineraryFields(type) {
+  if (!itineraryFields) return;
+  if (type === 'trip') {
+    itineraryFields.classList.remove('hidden');
+  } else {
+    itineraryFields.classList.add('hidden');
+    form.hotels.value = '';
+    form.restaurants.value = '';
+    form.attractions.value = '';
+  }
+}
+
+// initial state
+toggleItineraryFields(form.type.value || 'trip');
 
 if (shuffleIdea && ideaText) {
   shuffleIdea.addEventListener('click', () => {
