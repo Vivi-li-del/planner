@@ -286,7 +286,10 @@ function renderItinerary(plan) {
   const restaurants = splitLines(plan.restaurants);
   const attractions = splitLines(plan.attractions);
   if (!hotels.length && !restaurants.length && !attractions.length) return '';
-  const pill = (items, icon) => items.map(i => `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/10 text-[11px]"><i class="fa-solid ${icon}"></i> ${i}</span>`).join(' ');
+  const pill = (items, icon) => items.map(i => {
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(i)}`;
+    return `<a class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] hover:border-indigo-400 hover:text-indigo-100" href="${url}" target="_blank" rel="noopener noreferrer"><i class="fa-solid ${icon}"></i> ${i}</a>`;
+  }).join(' ');
   return `
     <div class="flex flex-wrap gap-2 mt-2 text-xs text-slate-200">
       ${hotels.length ? pill(hotels, 'fa-hotel') : ''}
