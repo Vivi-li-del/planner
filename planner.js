@@ -45,9 +45,14 @@ function renderPlans() {
   const filtered = plans.filter(p => activeFilter === 'all' || p.type === activeFilter);
 
   filtered.forEach(plan => {
+    const startDate = parseDate(plan.date);
+    if (!startDate) return; // require valid start date
+    let endDate = parseDate(plan.endDate) || startDate;
+    if (endDate < startDate) endDate = startDate;
+
     const card = document.createElement('div');
     card.className = 'card rounded-xl bg-slate-900 border border-white/10 p-3 flex flex-col gap-2';
-    const range = formatRange(plan.date, plan.endDate);
+    const range = formatRange(startDate, endDate);
     card.innerHTML = `
       <div class="flex items-center justify-between">
         <span class="font-semibold">${plan.title}</span>
@@ -65,21 +70,18 @@ function renderPlans() {
     `;
     lists[plan.type].appendChild(card);
 
-    if (plan.date) {
-      const planDate = new Date(plan.date + 'T00:00:00');
-      if (planDate >= now) {
-        const upcomingItem = document.createElement('div');
-        upcomingItem.className = 'rounded-lg bg-slate-900 border border-white/10 p-3 flex items-center justify-between text-sm';
-        upcomingItem.innerHTML = `
-          <div class="flex flex-col">
-            <span class="font-semibold">${plan.title}</span>
-            <span class="text-slate-400 text-xs">${formatRange(plan.date, plan.endDate)}</span>
-            ${plan.location ? `<span class="text-slate-500 text-xs">${plan.location}</span>` : ''}
-          </div>
-          <span class="text-xs px-2 py-1 rounded-full ${badgeClass(plan.type)}">${plan.type}</span>
-        `;
-        upcomingList.appendChild(upcomingItem);
-      }
+    if (startDate >= new Date(now.toDateString())) { // compare date-only
+      const upcomingItem = document.createElement('div');
+      upcomingItem.className = 'rounded-lg bg-slate-900 border border-white/10 p-3 flex items-center justify-between text-sm';
+      upcomingItem.innerHTML = `
+        <div class="flex flex-col">
+          <span class="font-semibold">${plan.title}</span>
+          <span class="text-slate-400 text-xs">${range}</span>
+          ${plan.location ? `<span class="text-slate-500 text-xs">${plan.location}</span>` : ''}
+        </div>
+        <span class="text-xs px-2 py-1 rounded-full ${badgeClass(plan.type)}">${plan.type}</span>
+      `;
+      upcomingList.appendChild(upcomingItem);
     }
 
     // Calendar view will be rendered separately after loop
@@ -92,7 +94,7 @@ function renderPlans() {
         <span class="font-semibold">${plan.title}</span>
         <span class="text-xs px-2 py-1 rounded-full ${badgeClass(plan.type)}">${plan.type}</span>
       </div>
-      <div class="text-xs text-slate-400 flex items-center gap-2">${formatRange(plan.date, plan.endDate)}${plan.location ? ` • ${plan.location}` : ''}</div>
+      <div class="text-xs text-slate-400 flex items-center gap-2">${range}${plan.location ? ` • ${plan.location}` : ''}</div>
       ${plan.note ? `<p class="text-slate-200">${plan.note}</p>` : ''}
     `;
     listView.appendChild(listItem);
@@ -118,12 +120,20 @@ function badgeClass(type) {
 }
 
 function formatRange(start, end) {
-  if (!start && !end) return 'Anytime';
-  if (start && !end) return new Date(start + 'T00:00:00').toDateString();
-  if (!start && end) return `Until ${new Date(end + 'T00:00:00').toDateString()}`;
-  const s = new Date(start + 'T00:00:00').toDateString();
-  const e = new Date(end + 'T00:00:00').toDateString();
-  return `${s} — ${e}`;
+  const sDate = start instanceof Date ? start : parseDate(start);
+  const eDate = end instanceof Date ? end : parseDate(end);
+  if (!sDate && !eDate) return 'Anytime';
+  if (sDate && !eDate) return sDate.toDateString();
+  if (!sDate && eDate) return `Until ${eDate.toDateString()}`;
+  if (eDate < sDate) return sDate.toDateString();
+  if (sDate.getTime() === eDate.getTime()) return sDate.toDateString();
+  return `${sDate.toDateString()} — ${eDate.toDateString()}`;
+}
+
+function parseDate(str) {
+  if (!str) return null;
+  const d = new Date(`${str}T00:00:00`);
+  return Number.isNaN(d.getTime()) ? null : d;
 }
 
 function renderCalendar() {
@@ -139,9 +149,10 @@ function renderCalendar() {
   // prepare date map
   const dayPlans = {};
   plans.forEach(p => {
-    if (!p.date) return;
-    const s = new Date(p.date + 'T00:00:00');
-    const e = p.endDate ? new Date(p.endDate + 'T00:00:00') : s;
+    const s = parseDate(p.date);
+    if (!s) return;
+    let e = parseDate(p.endDate) || s;
+    if (e < s) e = s;
     for (let d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
       const key = d.toISOString().slice(0,10);
       if (!dayPlans[key]) dayPlans[key] = [];
