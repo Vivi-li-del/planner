@@ -1,9 +1,6 @@
 const form = document.getElementById('plan-form');
 const tripList = document.getElementById('trip-list');
 const weekendList = document.getElementById('weekend-list');
-const familyList = document.getElementById('family-list');
-const upcomingList = document.getElementById('upcoming-list');
-const upcomingCount = document.getElementById('upcoming-count');
 const ideaText = document.getElementById('idea-text');
 const shuffleIdea = document.getElementById('shuffle-idea');
 const filterButtons = document.querySelectorAll('.filter-btn');
@@ -37,9 +34,8 @@ let calendarPickTarget = 'start';
 
 function renderPlans() {
   const now = new Date();
-  const lists = { trip: tripList, weekend: weekendList, family: familyList };
+  const lists = { trip: tripList, weekend: weekendList };
   Object.values(lists).forEach(list => list.innerHTML = '');
-  upcomingList.innerHTML = '';
   calendarGrid.innerHTML = '';
   listView.innerHTML = '';
 
@@ -71,22 +67,6 @@ function renderPlans() {
     `;
     lists[plan.type].appendChild(card);
 
-    if (startDate >= new Date(now.toDateString())) { // compare date-only
-      const upcomingItem = document.createElement('div');
-      upcomingItem.className = 'rounded-lg bg-slate-900 border border-white/10 p-3 flex items-center justify-between text-sm';
-      upcomingItem.innerHTML = `
-        <div class="flex flex-col">
-          <span class="font-semibold">${plan.title}</span>
-          <span class="text-slate-400 text-xs">${range}</span>
-          ${plan.location ? `<span class="text-slate-500 text-xs">${plan.location}</span>` : ''}
-        </div>
-        <span class="text-xs px-2 py-1 rounded-full ${badgeClass(plan.type)}">${plan.type}</span>
-      `;
-      upcomingList.appendChild(upcomingItem);
-    }
-
-    // Calendar view will be rendered separately after loop
-
     // List view
     const listItem = document.createElement('div');
     listItem.className = 'rounded-lg bg-slate-900 border border-white/10 p-3 text-sm flex flex-col gap-1';
@@ -102,8 +82,6 @@ function renderPlans() {
     listView.appendChild(listItem);
   });
 
-  upcomingCount.textContent = `${upcomingList.childElementCount} upcoming`;
-
   // bind edit/delete
   document.querySelectorAll('.edit-btn').forEach(btn => {
     btn.onclick = () => startEdit(btn.dataset.id);
@@ -117,8 +95,7 @@ function renderPlans() {
 
 function badgeClass(type) {
   if (type === 'trip') return 'bg-indigo-500/20 text-indigo-200 border border-indigo-500/30';
-  if (type === 'weekend') return 'bg-pink-500/20 text-pink-200 border border-pink-500/30';
-  return 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/30';
+  return 'bg-pink-500/20 text-pink-200 border border-pink-500/30';
 }
 
 function formatRange(start, end) {
@@ -357,7 +334,6 @@ if (shuffleIdea && ideaText) {
 // Seed some sample plans
 plans = [
   { id: createId(), title: 'Spring break road trip', location: 'San Diego', type: 'trip', date: '2026-04-10', endDate: '2026-04-15', hotels: 'Hotel Indigo', restaurants: 'Liberty Public Market', attractions: 'Balboa Park\nLa Jolla Cove', note: 'Book hotel, pack layers, bring snacks' },
-  { id: createId(), title: 'Saturday soccer', location: 'Community field', type: 'family', date: '2026-03-21', endDate: '', hotels: '', restaurants: '', attractions: '', note: 'Bring water and snacks' },
   { id: createId(), title: 'Brunch + farmers market', location: 'Downtown', type: 'weekend', date: '2026-03-22', endDate: '', hotels: '', restaurants: '', attractions: '', note: 'Try the new coffee spot' }
 ];
 
