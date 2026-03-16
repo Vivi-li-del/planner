@@ -33,6 +33,7 @@ let plans = [];
 let activeFilter = 'all';
 let editingId = null;
 let calendarCursor = new Date();
+let calendarPickTarget = 'start';
 
 function renderPlans() {
   const now = new Date();
@@ -146,6 +147,10 @@ function renderCalendar() {
   const startDay = start.getDay();
   calendarMonthLabel.textContent = `${start.toLocaleString('default', { month: 'long' })} ${year}`;
 
+  const selectedStart = parseDate(form.date.value);
+  const selectedEndRaw = parseDate(form.endDate.value);
+  const selectedEnd = selectedEndRaw && selectedStart && selectedEndRaw < selectedStart ? selectedStart : (selectedEndRaw || selectedStart);
+
   // prepare date map
   const dayPlans = {};
   plans.forEach(p => {
@@ -170,8 +175,14 @@ function renderCalendar() {
   for (let day = 1; day <= end.getDate(); day++) {
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const cell = document.createElement('div');
-    cell.className = 'min-h-[110px] rounded-xl bg-slate-900 border border-white/10 p-2 flex flex-col gap-1';
+    const cellDate = parseDate(dateStr);
+    const isSelected = selectedStart && cellDate && selectedEnd && cellDate >= selectedStart && cellDate <= selectedEnd;
+    const isStart = selectedStart && cellDate && cellDate.getTime() === selectedStart.getTime();
+    cell.className = 'min-h-[110px] rounded-xl bg-slate-900 border border-white/10 p-2 flex flex-col gap-1 cursor-pointer transition hover:border-indigo-400/80';
+    if (isSelected) cell.classList.add('bg-indigo-500/10', 'border-indigo-400/70');
+    if (isStart) cell.classList.add('ring-2', 'ring-indigo-500');
     cell.innerHTML = `<div class="text-xs text-slate-400">${day}</div>`;
+    cell.onclick = () => handleCalendarPick(dateStr);
     const items = dayPlans[dateStr] || [];
     items.forEach(item => {
       const badge = document.createElement('div');
@@ -181,6 +192,32 @@ function renderCalendar() {
     });
     calendarGrid.appendChild(cell);
   }
+}
+
+function handleCalendarPick(dateStr) {
+  const picked = dateStr;
+  if (calendarPickTarget === 'start' || !form.date.value) {
+    form.date.value = picked;
+    // keep end in sync if it was before start
+    const endVal = parseDate(form.endDate.value);
+    const startVal = parseDate(form.date.value);
+    if (endVal && startVal && endVal < startVal) {
+      form.endDate.value = picked;
+    }
+    calendarPickTarget = 'end';
+  } else {
+    // set end
+    const startVal = parseDate(form.date.value);
+    const endVal = parseDate(picked);
+    if (startVal && endVal && endVal < startVal) {
+      form.endDate.value = form.date.value;
+      form.date.value = picked;
+    } else {
+      form.endDate.value = picked;
+    }
+    calendarPickTarget = 'start';
+  }
+  renderCalendar();
 }
 
 form.addEventListener('submit', (e) => {
@@ -195,6 +232,11 @@ form.addEventListener('submit', (e) => {
     endDate: data.get('endDate') || '',
     note: data.get('note')?.trim() || ''
   };
+  const startVal = parseDate(plan.date);
+  const endVal = parseDate(plan.endDate);
+  if (startVal && endVal && endVal < startVal) {
+    plan.endDate = plan.date;
+  }
   if (editingId) {
     plans = plans.map(p => (p.id === editingId ? plan : p));
     editingId = null;
@@ -283,6 +325,8 @@ viewCalendarBtn.addEventListener('click', () => setView('calendar'));
 viewListBtn.addEventListener('click', () => setView('list'));
 prevMonthBtn?.addEventListener('click', () => { calendarCursor.setMonth(calendarCursor.getMonth() - 1); renderCalendar(); });
 nextMonthBtn?.addEventListener('click', () => { calendarCursor.setMonth(calendarCursor.getMonth() + 1); renderCalendar(); });
+form.date.addEventListener('change', () => { calendarPickTarget = 'end'; renderCalendar(); });
+form.endDate.addEventListener('change', () => { calendarPickTarget = 'start'; renderCalendar(); });
 
 // Seed some sample plans
 plans = [
