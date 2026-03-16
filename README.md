@@ -1,12 +1,12 @@
-# Family Trip & Weekend Planner
+# Trips & Weekend Planner
 
-Plan trips, weekends, and family activities in one place. Add date ranges, locations, notes, and manage items with edit/delete. Switch between calendar and list views to see everything at a glance.
+Plan trips and weekend activities in one place. Add date ranges, locations, notes, and manage items with edit/delete. Switch between calendar and list views to see everything at a glance.
 
 ## Features
-- Add activities with start/end dates, type (trip, weekend, family), location, and notes
+- Add activities with start/end dates, type (trip or weekend), location, and notes
+- Trip itineraries: hotels, restaurants, attractions (one per line)
 - Calendar view with month navigation and date-range rendering
-- List view with filters by type (All, Trips, Weekend, Family)
-- Quick ideas shuffle for inspiration
+- List view with filters by type (All, Trips, Weekend)
 - Edit or delete existing plans inline
 
 ## Files
@@ -17,7 +17,8 @@ Plan trips, weekends, and family activities in one place. Add date ranges, locat
 ## Usage
 1) Open `planner.html` locally or host the folder on a static server.
 2) Use the form to add items. For ranges, set start and stop dates; single-day items can omit the end date.
-3) Toggle Calendar/List view with the buttons. Use filters to show only trips, weekend, or family items.
+3) Add itineraries for trips in the hotels/restaurants/attractions fields (one per line).
+4) Toggle Calendar/List view with the buttons. Use filters to show only trips or weekend items.
 
 ## Deployment (GitHub Pages)
 1) Push to GitHub.
